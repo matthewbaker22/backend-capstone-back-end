@@ -21,6 +21,7 @@ from jobsaverapi.views import *
 from jobsaverapi.models import *
 from django.conf import settings
 from django.conf.urls.static import static
+from jobsaverapi.views import login_user, register_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'jobs', Jobs, 'job')
@@ -28,4 +29,8 @@ router.register(r'jobs', Jobs, 'job')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('login/', login_user),
+    path('register/', register_user),
+    path('api-token-auth/', obtain_auth_token),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
