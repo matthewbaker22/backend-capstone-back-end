@@ -25,6 +25,9 @@ from jobsaverapi.views import login_user, register_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'jobs', Jobs, 'job')
+router.register(r'status', Statuses, 'status')
+router.register(r'job_status', Job_Statuses,'job_status')
+router.register(r'user', Users, 'user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

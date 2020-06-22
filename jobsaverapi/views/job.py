@@ -13,7 +13,7 @@ class JobSerializer(serializers.HyperlinkedModelSerializer):
             view_name = 'job',
             lookup_field = 'id'
         )
-        fields = ('id', 'company_name', 'job_title', 'notes', 'interview_date')
+        fields = ('id', 'company_name', 'job_title', 'notes', 'interview_date', 'user_id')
     
 class Jobs(ViewSet):
 
@@ -23,6 +23,7 @@ class Jobs(ViewSet):
         new_job.job_title = request.data['job_title']
         new_job.notes = request.data['notes']
         new_job.interview_date = request.data['interview_date']
+        new_job.user_id = request.data['user_id']
 
         serializer = JobSerializer(new_job, context = {'request': request})
 
@@ -42,7 +43,7 @@ class Jobs(ViewSet):
         pass
 
     def list(self, request):
-        jobs = Job.objects.all()
+        jobs = Job.objects.filter(user=request.auth.user)
 
         serializer = JobSerializer(
             jobs, many=True, context={'request': request}
