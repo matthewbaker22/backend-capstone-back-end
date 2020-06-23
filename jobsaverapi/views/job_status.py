@@ -12,10 +12,38 @@ class JobStatusSerializer(serializers.HyperlinkedModelSerializer):
             view_name = 'job_status',
             lookup_field = 'id'
         )
-        fields = ('id', 'created_at', 'job_id', 'status_id')
+        fields = ('id', 'created_at', 'job_id', 'status_id', 'job', 'status')
         depth = 2
 
 class Job_Statuses(ViewSet):
+    def create(self, request):
+        new_job_status = Job_Status()
+        new_job_status.job_id = request.data['job_id']
+        new_job_status.status_id = request.data['status_id']
+        new_job_status.created_at = request.data['created_at']
+        new_job_status.save()
+
+        serializer = JobStatusSerializer(new_job_status, context={'request': request})
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        try:
+            job_status = Job_Status.objects.get(pk=pk)
+            serializer = JobStatusSerializer(job_status, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+    def destroy(self, request, pk=None):
+        try:
+            job_status = Job_Status.objects.get(pk=pk)
+            job_status.delete()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        except Job_Status.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def list(self, request):
         job_statuses = Job_Status.objects.all()
 
