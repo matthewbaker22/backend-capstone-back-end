@@ -5,5 +5,5 @@ class Job(models.Model):
     company_name = models.CharField(max_length=255)
     job_title = models.CharField(max_length=255)
     notes = models.CharField(max_length=1500)
-    interview_date = models.DateTimeField()
+    interview_date = models.DateTimeField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

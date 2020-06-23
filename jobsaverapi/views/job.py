@@ -23,7 +23,8 @@ class Jobs(ViewSet):
         new_job.job_title = request.data['job_title']
         new_job.notes = request.data['notes']
         new_job.interview_date = request.data['interview_date']
-        new_job.user_id = request.data['user_id']
+        new_job.user_id = request.auth.user.id
+        new_job.save()
 
         serializer = JobSerializer(new_job, context = {'request': request})
 
