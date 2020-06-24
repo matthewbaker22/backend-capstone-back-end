@@ -39,7 +39,16 @@ class Jobs(ViewSet):
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-        pass
+        job = Job.objects.get(pk=pk)
+        job.company_name = request.data['company_name']
+        job.job_title = request.data['job_title']
+        job.notes = request.data['notes']
+        job.interview_date = request.data['interview_date']
+        job.user_id = request.auth.user.id
+        job.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
     def destroy(self, request, pk=None):
         pass
 

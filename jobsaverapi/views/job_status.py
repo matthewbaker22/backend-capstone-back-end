@@ -13,7 +13,7 @@ class JobStatusSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field = 'id'
         )
         fields = ('id', 'created_at', 'job_id', 'status_id', 'job', 'status')
-        depth = 2
+        depth = 1
 
 class Job_Statuses(ViewSet):
     def create(self, request):
@@ -33,6 +33,14 @@ class Job_Statuses(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    def update(self, request, pk=None):
+        job_status = request.data['job_id']
+        job_status.status_id = request.data['status_id']
+        job_status.created_at = request.data['created_at']
+        job_status.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         try:
