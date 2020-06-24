@@ -55,6 +55,10 @@ class Jobs(ViewSet):
     def list(self, request):
         jobs = Job.objects.filter(user=request.auth.user)
 
+        company_name = self.request.query_params.get('company_name', None)
+        if company_name is not None:
+            jobs = Job.objects.filter(company_name__icontains=company_name)
+            
         serializer = JobSerializer(
             jobs, many=True, context={'request': request}
         )
